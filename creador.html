@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Reseña de la creadora del sitio y fuentes consultadas.">
+    <title>Sobre mí | Docker y Contenedores</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+    <header class="site-header">
+        <div class="container header-layout">
+            <a class="brand" href="index.html">🐳 Docker<span>y Contenedores</span></a>
+                 <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-principal">☰</button>
+            <nav id="nav-principal" aria-label="Navegación principal">
+                <ul class="nav-list">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="fundamentos.html">Fundamentos</a></li>
+                    <li><a href="arquitectura.html">Arquitectura</a></li>
+                    <li><a href="imagenes.html">Imágenes</a></li>
+                    <li><a href="compose.html">Compose</a></li>
+                    <li><a href="creador.html" class="activo" aria-current="page">Sobre mí</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="contenido" class="container">
+        <section class="page-intro">
+            <p class="eyebrow">Creadora del sitio</p>
+            <h1>Sobre mí</h1>
+        </section>
+
+        <section class="perfil">
+            <figure>
+                <img src="img/creador.jpg" alt="Retrato de la creadora del sitio: cabello largo y oscuro, cárdigan blanco, frente a una pared de madera clara" width="800" height="999">
+            </figure>
+
+            <div class="perfil-texto">
+                <h2>Keycy Martínez</h2>
+                <p>Soy estudiante de Licenciatura en Desarrollo y Gestión de Software en la Universidad Tecnológica de Panamá. Este sitio es mi trabajo para la asignatura Desarrollo de Software V, y está dedicado a Docker y los contenedores.</p>
+                <p>Escogí el tema de Docker y Contenedores porque es un tema con el que estuve trabajando recientemente en un proyecto de una aplicación web por lo que fue el tema que más me llamó inmediatamente al ver la lista de propuestas. </p>
+                <p>Del desarrollo de este parcial aprendí a utilizar mejor HTML y CSS ya que quise que mi sitio web tuviera varios elementos visuales y que fuera un diseño muy creativo, así que, además de las tablas y contenedores, incluí una línea de tiempo, diagramas, comandos y colores en degradado para todo el sitio; al final quedé muy satisfecha con el resultado.</p>
+
+                <ul class="datos" aria-label="Tecnologías utilizadas">
+                    <li>HTML</li>
+                    <li>CSS</li>
+                    <li>JavaScript</li>
+                    <li>Docker</li>
+                    <li>Git y GitHub</li>
+                </ul>
+
+                <a class="button" href="https://github.com/KeycyMartinez/Parcial-2">Ver mi GitHub ↗</a>
+            </div>
+        </section>
+
+        <section class="fuentes-seccion" id="fuentes">
+            <h2>Fuentes consultadas</h2>
+            <p class="lead">El contenido de este sitio se basa en documentación oficial y en los estándares del ecosistema de contenedores. Consultadas en noviembre de 2026.</p>
+
+            <ul class="fuentes">
+                <li>
+                    <a href="https://docs.docker.com/">Documentación oficial de Docker ↗</a>
+                    <p>Docker Inc. Referencia general: arquitectura, Dockerfile, redes y volúmenes.</p>
+                    <span class="uso">Módulos: Arquitectura, Imágenes, Compose</span>
+                </li>
+                <li>
+                    <a href="https://docs.docker.com/build/building/best-practices/">Buenas prácticas para construir imágenes ↗</a>
+                    <p>Docker Inc. Caché de capas, multi-stage builds y seguridad en Dockerfile.</p>
+                    <span class="uso">Módulo: Imágenes</span>
+                </li>
+                <li>
+                    <a href="https://docs.docker.com/compose/">Documentación de Docker Compose ↗</a>
+                    <p>Docker Inc. Archivo Compose, servicios, redes, volúmenes y comandos.</p>
+                    <span class="uso">Módulo: Compose</span>
+                </li>
+                <li>
+                    <a href="https://opencontainers.org/">Open Container Initiative ↗</a>
+                    <p>Linux Foundation. Especificaciones estándar de imágenes y runtimes de contenedores.</p>
+                    <span class="uso">Módulos: Fundamentos, Arquitectura</span>
+                </li>
+                <li>
+                    <a href="https://containerd.io/">containerd ↗</a>
+                    <p>CNCF. Documentación del runtime de alto nivel que usa Docker.</p>
+                    <span class="uso">Módulo: Arquitectura</span>
+                </li>
+                <li>
+                    <a href="https://man7.org/linux/man-pages/man7/namespaces.7.html">namespaces(7), manual de Linux ↗</a>
+                    <p>Linux man-pages project. Descripción técnica de los espacios de nombres del kernel.</p>
+                    <span class="uso">Módulo: Arquitectura</span>
+                </li>
+                <li>
+                    <a href="https://man7.org/linux/man-pages/man7/cgroups.7.html">cgroups(7), manual de Linux ↗</a>
+                    <p>Linux man-pages project. Descripción técnica de los grupos de control de recursos.</p>
+                    <span class="uso">Módulo: Arquitectura</span>
+                </li>
+                <li>
+                    <a href="https://kubernetes.io/docs/concepts/overview/">Kubernetes: visión general ↗</a>
+                    <p>The Kubernetes Authors. Qué es Kubernetes y qué problemas resuelve.</p>
+                    <span class="uso">Módulo: Compose</span>
+                </li>
+            </ul>
+        </section>
+
+        <a class="pagina-siguiente" href="index.html">
+            <span>Fin del recorrido</span>
+            Volver al inicio →
+        </a>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-layout">
+            <p>🐳 Aprende, prueba y despliega</p>
+            <a href="#contenido">Volver arriba ↑</a>
+        </div>
+    </footer>
+<script src="js/script.js" defer></script>
+</body>
+</html>
