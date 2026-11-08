@@ -16,14 +16,15 @@
     <header class="site-header">
         <div class="container header-layout">
             <a class="brand" href="index.html">🐳 Docker<span>y Contenedores</span></a>
-            <nav aria-label="Navegación principal">
+                 <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-principal">☰</button>
+            <nav id="nav-principal" aria-label="Navegación principal">
                 <ul class="nav-list">
                     <li><a href="index.html" class="activo" aria-current="page">Inicio</a></li>
                     <li><a href="fundamentos.html">Fundamentos</a></li>
                     <li><a href="arquitectura.html">Arquitectura</a></li>
                     <li><a href="imagenes.html">Imágenes</a></li>
                     <li><a href="compose.html">Compose</a></li>
-                    <li><a href="sobre-mi.html">Sobre mí</a></li>
+                    <li><a href="creador.html">Sobre mí</a></li>
                 </ul>
             </nav>
         </div>
@@ -31,10 +32,10 @@
         <main id="contenido" class="container">
         <section class="hero">
             <div>
-                <p class="eyebrow">Guía técnica</p>
+                <p class="eyebrow">Guía técnica · 4 módulos</p>
                 <h1>Empaqueta tu aplicación y ejecútala en cualquier lugar.</h1>
                 <p class="lead">Docker permite crear contenedores ligeros y portables para desarrollar, probar y desplegar software.</p>
-                <a class="button" href="conceptos.html">Empezar a aprender</a>
+                <a class="button" href="fundamentos.html">Empezar a aprender</a>
             </div>
             <figure>
                 <img src="img/DockerDesktop.png" alt="Ballena de Docker cargando contenedores" width="600" height="340">
@@ -74,5 +75,6 @@
             <a href="#contenido">Volver arriba ↑</a>
         </div>
     </footer>
+<script src="js/script.js" defer></script>
 </body>
 </html>
