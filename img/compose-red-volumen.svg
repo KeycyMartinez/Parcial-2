@@ -10,44 +10,36 @@
 
   <rect width="800" height="400" rx="20" fill="#ffffff"/>
 
-  <!-- Navegador -->
   <rect x="30" y="145" width="130" height="75" rx="10" fill="#1e1b4b"/>
   <text x="95" y="177" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">Navegador</text>
   <text x="95" y="198" text-anchor="middle" font-size="11" fill="#cfcdf0">localhost:8000</text>
 
-  <!-- Anfitrión -->
   <rect x="210" y="30" width="560" height="340" rx="16" fill="#f4f1ff" stroke="#7C3AED" stroke-width="2" stroke-dasharray="7 6"/>
   <text x="750" y="55" text-anchor="end" font-size="13" font-weight="600" fill="#7C3AED">Anfitrión Docker</text>
 
-  <!-- Red del proyecto -->
   <rect x="240" y="80" width="500" height="185" rx="14" fill="#ffffff" stroke="#2496ED" stroke-width="2" stroke-dasharray="7 5"/>
   <text x="260" y="104" font-size="12" font-weight="600" fill="#2496ED">Red del proyecto (bridge)</text>
 
-  <!-- web -->
   <rect x="270" y="120" width="170" height="110" rx="10" fill="#7C3AED"/>
   <text x="355" y="158" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">web</text>
   <text x="355" y="180" text-anchor="middle" font-size="12" fill="#ffffff">Flask · puerto 5000</text>
   <text x="355" y="202" text-anchor="middle" font-size="12" fill="#ffffff">publica 8000 → 5000</text>
 
-  <!-- redis -->
   <rect x="540" y="120" width="170" height="110" rx="10" fill="#EC4899"/>
   <text x="625" y="158" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">redis</text>
   <text x="625" y="180" text-anchor="middle" font-size="12" fill="#ffffff">Redis · puerto 6379</text>
   <text x="625" y="202" text-anchor="middle" font-size="12" fill="#ffffff">solo visible en la red</text>
 
-  <!-- Volumen -->
   <rect x="540" y="300" width="170" height="52" rx="10" fill="#fdf2f8" stroke="#EC4899" stroke-width="2"/>
   <text x="625" y="324" text-anchor="middle" font-size="13" font-weight="700" fill="#1e1b4b">Volumen</text>
   <text x="625" y="342" text-anchor="middle" font-size="12" fill="#5b5a7a">datos-redis</text>
 
-  <!-- Flechas -->
   <line x1="162" y1="182" x2="268" y2="182" stroke="#5b5a7a" stroke-width="2" marker-end="url(#flecha)"/>
   <line x1="442" y1="175" x2="538" y2="175" stroke="#5b5a7a" stroke-width="2" marker-end="url(#flecha)"/>
   <text x="490" y="164" text-anchor="middle" font-size="11" fill="#5b5a7a">redis:6379</text>
   <line x1="625" y1="232" x2="625" y2="298" stroke="#5b5a7a" stroke-width="2" marker-end="url(#flecha)"/>
   <text x="637" y="286" font-size="11" fill="#5b5a7a">/data</text>
 
-  <!-- Nota -->
   <text x="240" y="322" font-size="12" fill="#5b5a7a">Compose crea la red y el volumen</text>
   <text x="240" y="340" font-size="12" fill="#5b5a7a">automáticamente al ejecutar «up».</text>
 </svg>

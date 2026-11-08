@@ -4,10 +4,8 @@
 
   <rect width="800" height="400" rx="20" fill="#ffffff"/>
 
-  <!-- Divisor -->
   <line x1="400" y1="30" x2="400" y2="370" stroke="#e4e0f7" stroke-width="2" stroke-dasharray="6 6"/>
 
-  <!-- ===== IZQUIERDA: MÁQUINA VIRTUAL ===== -->
   <text x="205" y="45" text-anchor="middle" font-size="20" font-weight="700" fill="#1e1b4b">Máquina virtual</text>
 
   <rect x="40" y="70" width="160" height="50" rx="8" fill="#2496ED"/>
@@ -28,7 +26,6 @@
   <rect x="40" y="305" width="330" height="50" rx="8" fill="#1e1b4b"/>
   <text x="205" y="336" text-anchor="middle" font-size="15" font-weight="600" fill="#ffffff">Hardware</text>
 
-  <!-- ===== DERECHA: CONTENEDOR ===== -->
   <text x="595" y="45" text-anchor="middle" font-size="20" font-weight="700" fill="#1e1b4b">Contenedores</text>
 
   <rect x="430" y="70" width="104" height="50" rx="8" fill="#2496ED"/>
@@ -54,6 +51,5 @@
   <rect x="430" y="305" width="330" height="50" rx="8" fill="#1e1b4b"/>
   <text x="595" y="336" text-anchor="middle" font-size="15" font-weight="600" fill="#ffffff">Hardware</text>
 
-  <!-- Nota inferior -->
   <text x="400" y="385" text-anchor="middle" font-size="12" fill="#5b5a7a">Cada VM carga su propio sistema operativo · Los contenedores comparten el kernel del anfitrión</text>
 </svg>

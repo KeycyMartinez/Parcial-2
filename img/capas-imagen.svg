@@ -4,11 +4,9 @@
 
   <rect width="800" height="400" rx="20" fill="#ffffff"/>
 
-  <!-- Capa de escritura del contenedor -->
   <rect x="60" y="40" width="380" height="52" rx="10" fill="#fdf2f8" stroke="#EC4899" stroke-width="2" stroke-dasharray="7 5"/>
   <text x="250" y="72" text-anchor="middle" font-size="14" font-weight="600" fill="#1e1b4b">Capa de escritura del contenedor</text>
 
-  <!-- Capas de la imagen -->
   <rect x="60" y="108" width="380" height="52" rx="10" fill="#EC4899"/>
   <text x="80" y="139" font-size="14" font-weight="600" fill="#ffffff">Capa 4 · COPY . .</text>
 
@@ -21,12 +19,10 @@
   <rect x="60" y="288" width="380" height="52" rx="10" fill="#1e1b4b"/>
   <text x="80" y="319" font-size="14" font-weight="600" fill="#ffffff">Capa 1 · FROM node:22-alpine</text>
 
-  <!-- Llave: contenedor -->
   <path d="M452 42 L462 42 L462 90 L452 90" fill="none" stroke="#5b5a7a" stroke-width="2"/>
   <text x="478" y="62" font-size="15" font-weight="700" fill="#1e1b4b">Contenedor</text>
   <text x="478" y="82" font-size="12" fill="#5b5a7a">lectura y escritura</text>
 
-  <!-- Llave: imagen -->
   <path d="M452 110 L462 110 L462 338 L452 338" fill="none" stroke="#5b5a7a" stroke-width="2"/>
   <text x="478" y="214" font-size="15" font-weight="700" fill="#1e1b4b">Imagen</text>
   <text x="478" y="234" font-size="12" fill="#5b5a7a">capas de solo lectura</text>
