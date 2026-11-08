@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Redes, volúmenes y Docker Compose: cómo conectar contenedores, guardar datos y orquestar aplicaciones de varios servicios.">
+    <title>Compose | Docker y Contenedores</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+    <header class="site-header">
+        <div class="container header-layout">
+            <a class="brand" href="index.html">🐳 Docker<span>y Contenedores</span></a>
+                 <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-principal">☰</button>
+            <nav id="nav-principal" aria-label="Navegación principal">
+                <ul class="nav-list">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="fundamentos.html">Fundamentos</a></li>
+                    <li><a href="arquitectura.html">Arquitectura</a></li>
+                    <li><a href="imagenes.html">Imágenes</a></li>
+                    <li><a href="compose.html" class="activo" aria-current="page">Compose</a></li>
+                    <li><a href="creador.html">Sobre mí</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="contenido" class="container">
+        <section class="page-intro">
+            <p class="eyebrow">Módulo 04</p>
+            <h1>Redes, volúmenes y Compose</h1>
+            <p class="lead">Cómo se comunican los contenedores, cómo guardan datos y cómo se define una aplicación completa en un solo archivo.</p>
+        </section>
+
+        <div class="page-layout">
+
+            <aside class="toc">
+                <nav aria-label="Contenido de esta página">
+                    <p class="toc-titulo">En esta página</p>
+                    <ul>
+                        <li><a href="#redes">Redes</a></li>
+                        <li><a href="#volumenes">Volúmenes</a></li>
+                        <li><a href="#compose">Docker Compose</a></li>
+                        <li><a href="#laboratorio">Laboratorio</a></li>
+                        <li><a href="#orquestacion">Más allá de un servidor</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <div class="contenido-pagina">
+
+                <section id="redes">
+                    <h2>Redes</h2>
+                    <p>Una aplicación real rara vez es un solo contenedor: suele haber un servidor web, una API y una base de datos que deben comunicarse. Docker resuelve esto con redes virtuales a las que se conectan los contenedores. Cada red usa un <em>driver</em> que define cómo funciona:</p>
+
+                    <div class="tabla-scroll">
+                        <table>
+                            <caption>Drivers de red de Docker</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Driver</th>
+                                    <th scope="col">Cómo funciona</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row"><code>bridge</code></th>
+                                    <td>El predeterminado. Red privada dentro de un solo anfitrión: los contenedores se ven entre sí y salen a internet mediante NAT.</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><code>host</code></th>
+                                    <td>El contenedor usa directamente la red del anfitrión (en Linux). No hay aislamiento de red ni hace falta publicar puertos.</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><code>none</code></th>
+                                    <td>Sin red, salvo la interfaz local. Es el máximo aislamiento.</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><code>overlay</code></th>
+                                    <td>Conecta contenedores que se ejecutan en varios anfitriones. Se usa con Docker Swarm.</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><code>macvlan</code></th>
+                                    <td>Da al contenedor su propia dirección MAC e IP en la red física, como si fuera otro equipo.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="subtitulo">Redes definidas por el usuario</h3>
+                    <p>Existe una diferencia importante dentro de <code>bridge</code>. En la red por defecto, los contenedores solo pueden encontrarse por dirección IP. En una red <strong>creada por ti</strong>, Docker incluye un DNS interno y los contenedores se localizan por su nombre. Además, solo se ven entre sí los contenedores conectados a esa red, lo que mejora el aislamiento.</p>
+
+<pre><code>docker network create red-app
+
+docker run -d --name db --network red-app \
+  -e POSTGRES_PASSWORD=secreto postgres:16
+
+docker run -d --name api --network red-app miapi:1.0
+
+docker network ls
+docker network inspect red-app</code></pre>
+
+                    <p>Con esto, el contenedor <code>api</code> puede conectarse a la base de datos usando simplemente <code>db</code> como nombre de servidor.</p>
+
+                    <h3 class="subtitulo">Publicar puertos</h3>
+                    <p>Los contenedores de una misma red se comunican sin publicar nada. Solo hay que publicar un puerto con <code>-p</code> cuando algo debe ser accesible desde fuera. El formato es <code>puerto-del-anfitrión:puerto-del-contenedor</code>:</p>
+
+<pre><code>docker run -d -p 8080:80 nginx
+docker run -d -p 127.0.0.1:8080:80 nginx</code></pre>
+
+                    <p>El primer comando deja el servicio accesible desde toda la red. El segundo lo limita al propio equipo, una buena práctica para servicios de desarrollo y bases de datos.</p>
+
+                    <div class="nota">
+                        <strong>Ojo con el firewall:</strong> Docker modifica por su cuenta las reglas de <code>iptables</code>, así que un puerto publicado puede quedar accesible aunque un firewall como <code>ufw</code> parezca bloquearlo. Publica solo lo necesario y limita con <code>127.0.0.1</code> cuando puedas.
+                    </div>
+                </section>
+
+                <section id="volumenes">
+                    <h2>Volúmenes</h2>
+                    <p>Como vimos en el módulo anterior, la capa de escritura de un contenedor desaparece cuando se elimina. Para datos que deben sobrevivir (bases de datos, archivos subidos por usuarios) hay tres mecanismos:</p>
+
+                    <div class="tabla-scroll">
+                        <table>
+                            <caption>Formas de almacenar datos en Docker</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col">Dónde se guarda</th>
+                                    <th scope="col">Uso típico</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Volumen con nombre</th>
+                                    <td>En una zona gestionada por Docker</td>
+                                    <td>Datos de producción, como bases de datos</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Bind mount</th>
+                                    <td>En una carpeta concreta del anfitrión</td>
+                                    <td>Desarrollo: ver los cambios del código al instante</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><code>tmpfs</code></th>
+                                    <td>En la memoria RAM (solo Linux)</td>
+                                    <td>Datos temporales o sensibles que no deben escribirse en disco</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>Ejemplo con un volumen con nombre para PostgreSQL:</p>
+
+<pre><code>docker volume create datos-db
+
+docker run -d --name db \
+  -v datos-db:/var/lib/postgresql/data \
+  -e POSTGRES_PASSWORD=secreto \
+  postgres:16
+
+docker volume ls
+docker volume inspect datos-db</code></pre>
+
+                    <p>Eliminar el contenedor con <code>docker rm</code> no borra un volumen con nombre. Si creas un contenedor nuevo y le montas <code>datos-db</code>, encontrará los datos intactos. Esa separación entre el contenedor (desechable) y los datos (persistentes) es lo que permite actualizar una aplicación sin perder información.</p>
+
+                    <p>Para desarrollo, un bind mount enlaza una carpeta de tu equipo con el contenedor:</p>
+
+<pre><code>docker run -d -p 3000:3000 -v "$(pwd)":/app miapp:1.0</code></pre>
+                </section>
+
+                <section id="compose">
+                    <h2>Docker Compose</h2>
+                    <p>Levantar una aplicación con varios contenedores a mano exige repetir muchos comandos largos. Docker Compose permite describir toda la aplicación (servicios, redes, volúmenes y variables) en un archivo YAML y controlarla con un solo comando.</p>
+
+                    <figure class="figura">
+                        <img src="img/compose-red-volumen.svg" alt="Diagrama de una aplicación con Compose: un navegador accede al servicio web por el puerto 8000; web y redis comparten una red del proyecto y se comunican por nombre; redis guarda sus datos en un volumen" width="800" height="400">
+                        <figcaption>Compose crea la red y el volumen del proyecto automáticamente.</figcaption>
+                    </figure>
+
+                    <p>Estas son las ideas clave:</p>
+                    <ul class="lista">
+                        <li><strong>Servicios:</strong> cada entrada bajo <code>services</code> es un contenedor (o varias réplicas del mismo).</li>
+                        <li><strong>Red automática:</strong> Compose crea una red para el proyecto y conecta en ella todos los servicios, que se encuentran por el nombre del servicio.</li>
+                        <li><strong>Volúmenes:</strong> se declaran una vez y se montan donde hagan falta.</li>
+                        <li><strong>Variables:</strong> Compose lee automáticamente un archivo <code>.env</code> para sustituir valores como <code>${DB_PASSWORD}</code>, y así los secretos no se escriben en el YAML.</li>
+                    </ul>
+
+                    <p>Los comandos más usados son:</p>
+
+<pre><code>docker compose up -d --build   # construir y arrancar en segundo plano
+docker compose ps              # ver el estado de los servicios
+docker compose logs -f web     # seguir los registros de un servicio
+docker compose down            # detener y eliminar contenedores y red
+docker compose down -v         # además, eliminar los volúmenes</code></pre>
+
+                    <div class="nota">
+                        <strong>Dos detalles actuales:</strong> el comando es <code>docker compose</code> (con espacio), integrado en Docker; la herramienta antigua <code>docker-compose</code> ya no recibe mantenimiento. Y el campo <code>version:</code> que aparece en tutoriales antiguos ya es obsoleto y puede omitirse.
+                    </div>
+                </section>
+
+                <section id="laboratorio">
+                    <h2>Laboratorio: contador de visitas</h2>
+                    <p>Vamos a construir una aplicación con dos servicios: una web en Python (Flask) que cuenta las visitas y una base de datos Redis donde se guarda el contador. Crea una carpeta nueva con estos cuatro archivos.</p>
+
+                    <h3 class="subtitulo"><code>app.py</code></h3>
+<pre><code>import os
+import redis
+from flask import Flask
+
+app = Flask(__name__)
+cache = redis.Redis(host=os.environ.get("REDIS_HOST", "redis"), port=6379)
+
+@app.route("/")
+def inicio():
+    visitas = cache.incr("visitas")
+    return f"Esta página se ha visitado {visitas} veces.\n"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)</code></pre>
+
+                    <h3 class="subtitulo"><code>requirements.txt</code></h3>
+<pre><code>flask
+redis</code></pre>
+
+                    <h3 class="subtitulo"><code>Dockerfile</code></h3>
+<pre><code>FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY app.py .
+EXPOSE 5000
+CMD ["python", "app.py"]</code></pre>
+
+                    <p>Observa que aplica lo visto en el módulo anterior: las dependencias se instalan antes de copiar el código para aprovechar la caché.</p>
+
+                    <h3 class="subtitulo"><code>compose.yaml</code></h3>
+<pre><code>services:
+  web:
+    build: .
+    ports:
+      - "8000:5000"
+    environment:
+      REDIS_HOST: redis
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - datos-redis:/data
+
+volumes:
+  datos-redis:</code></pre>
+
+                    <p>Fíjate en que <code>web</code> localiza la base de datos con el nombre <code>redis</code>, el mismo nombre del servicio. La opción <code>--appendonly yes</code> hace que Redis registre cada escritura en disco, dentro del volumen.</p>
+
+                    <h3 class="subtitulo">Ejecútalo</h3>
+                    <ol class="pasos">
+                        <li>Desde la carpeta del proyecto, ejecuta <code>docker compose up -d --build</code>.</li>
+                        <li>Abre <code>http://localhost:8000</code> en el navegador y recarga varias veces: el contador sube.</li>
+                        <li>Ejecuta <code>docker compose down</code> y luego <code>docker compose up -d</code> otra vez. Los contenedores son nuevos, pero el contador <strong>continúa donde estaba</strong> gracias al volumen.</li>
+                        <li>Ejecuta <code>docker compose down -v</code> y vuelve a levantar la aplicación. Ahora el contador empieza de cero, porque el volumen se eliminó.</li>
+                    </ol>
+
+                    <div class="nota">
+                        <strong>Sobre <code>depends_on</code>:</strong> solo controla el orden de arranque, no garantiza que Redis ya esté listo para recibir conexiones. Para eso se añade un <code>healthcheck</code> al servicio y la condición <code>service_healthy</code>. En esta práctica no hace falta, pero en una base de datos real conviene incluirlo.
+                    </div>
+                </section>
+
+                <section id="orquestacion">
+                    <h2>Más allá de un servidor</h2>
+                    <p>Compose está pensado para un solo anfitrión. Cuando una aplicación necesita ejecutarse en varios servidores, con réplicas, recuperación automática ante fallos y actualizaciones sin interrupciones, se usa un <strong>orquestador</strong>.</p>
+
+                    <div class="tabla-scroll">
+                        <table>
+                            <caption>Comparación entre Compose, Swarm y Kubernetes</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Herramienta</th>
+                                    <th scope="col">Alcance</th>
+                                    <th scope="col">Cuándo usarla</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Docker Compose</th>
+                                    <td>Un solo anfitrión</td>
+                                    <td>Desarrollo local, pruebas y aplicaciones pequeñas</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Docker Swarm</th>
+                                    <td>Un clúster de anfitriones</td>
+                                    <td>Orquestación sencilla, integrada en Docker. Sigue disponible, aunque su adopción es mucho menor que la de Kubernetes</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Kubernetes</th>
+                                    <td>Un clúster de anfitriones</td>
+                                    <td>Estándar de facto en producción: escalado automático, autorrecuperación y despliegues progresivos, con mayor complejidad</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>Kubernetes nació en Google (2014) y hoy lo mantiene la CNCF. No sustituye a Docker: orquesta contenedores que se construyen con las mismas imágenes estándar de la OCI que vimos en los módulos anteriores. Por eso lo aprendido aquí sigue siendo válido al dar el salto.</p>
+                </section>
+
+                <a class="pagina-siguiente" href="creador.html">
+                    <span>Último paso</span>
+                    Sobre mí →
+                </a>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-layout">
+            <p>🐳 Aprende, prueba y despliega</p>
+            <a href="#contenido">Volver arriba ↑</a>
+        </div>
+    </footer>
+<script src="js/script.js" defer></script>
+</body>
+</html>
