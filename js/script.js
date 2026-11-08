@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* ===== 1. MENÚ HAMBURGUESA ===== */
     const boton = document.querySelector('.menu-toggle');
     const nav = document.getElementById('nav-principal');
 
@@ -19,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
             boton.textContent = abierto ? '✕' : '☰';
         });
 
-        // Se cierra al elegir una página, al pulsar Escape o al agrandar la ventana
         nav.addEventListener('click', (e) => {
             if (e.target.closest('a')) cerrarMenu();
         });
@@ -29,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.matchMedia('(min-width: 961px)').addEventListener('change', cerrarMenu);
     }
 
-    /* ===== 2. BOTÓN COPIAR EN BLOQUES DE CÓDIGO ===== */
     document.querySelectorAll('pre').forEach((pre) => {
         const codigo = pre.querySelector('code');
         if (!codigo || pre.classList.contains('salida')) return;
@@ -58,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         pre.appendChild(btn);
     });
 
-    /* ===== 3. ÍNDICE LATERAL: RESALTAR LA SECCIÓN ACTUAL ===== */
     const enlacesIndice = document.querySelectorAll('.toc a');
 
     if (enlacesIndice.length && 'IntersectionObserver' in window) {
