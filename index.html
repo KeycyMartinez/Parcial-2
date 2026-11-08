@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aprende qué es Docker y cómo funcionan los contenedores.">
+    <title>Inicio | Docker y Contenedores</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+    <header class="site-header">
+        <div class="container header-layout">
+            <a class="brand" href="index.html">🐳 Docker<span>y Contenedores</span></a>
+                 <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-principal">☰</button>
+            <nav id="nav-principal" aria-label="Navegación principal">
+                <ul class="nav-list">
+                    <li><a href="index.html" class="activo" aria-current="page">Inicio</a></li>
+                    <li><a href="fundamentos.html">Fundamentos</a></li>
+                    <li><a href="arquitectura.html">Arquitectura</a></li>
+                    <li><a href="imagenes.html">Imágenes</a></li>
+                    <li><a href="compose.html">Compose</a></li>
+                    <li><a href="creador.html">Sobre mí</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+        <main id="contenido" class="container">
+        <section class="hero">
+            <div>
+                <p class="eyebrow">Guía técnica · 4 módulos</p>
+                <h1>Empaqueta tu aplicación y ejecútala en cualquier lugar.</h1>
+                <p class="lead">Docker permite crear contenedores ligeros y portables para desarrollar, probar y desplegar software.</p>
+                <a class="button" href="fundamentos.html">Empezar a aprender</a>
+            </div>
+            <figure>
+                <img src="img/DockerDesktop.png" alt="Ballena de Docker cargando contenedores" width="600" height="340">
+                <figcaption>Los contenedores son la base del despliegue moderno.</figcaption>
+            </figure>
+        </section>
+
+        <section>
+            <h2>¿Qué encontrarás aquí?</h2>
+            <div class="card-list">
+                <article class="card">
+                    <h3>Fundamentos</h3>
+                    <p>Del problema de "en mi máquina funciona" a los contenedores modernos.</p>
+                    <a href="fundamentos.html">Ver módulo →</a>
+                </article>
+                <article class="card">
+                    <h3>Arquitectura</h3>
+                    <p>Cómo Docker aísla procesos con namespaces y cgroups.</p>
+                    <a href="arquitectura.html">Ver módulo →</a>
+                </article>
+                <article class="card">
+                    <h3>Imágenes</h3>
+                    <p>Capas, Dockerfile y buenas prácticas para imágenes seguras.</p>
+                    <a href="imagenes.html">Ver módulo →</a>
+                </article>
+                <article class="card">
+                    <h3>Compose</h3>
+                    <p>Redes, volúmenes y aplicaciones de varios servicios.</p>
+                    <a href="compose.html">Ver módulo →</a>
+                </article>
+            </div>
+        </section>
+    </main>
+      <footer class="site-footer">
+        <div class="container footer-layout">
+            <p>🐳 Aprende, prueba y despliega</p>
+            <a href="#contenido">Volver arriba ↑</a>
+        </div>
+    </footer>
+<script src="js/script.js" defer></script>
+</body>
+</html>
