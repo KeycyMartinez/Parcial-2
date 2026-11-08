@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Qué problema resuelve Docker, su historia y en qué se diferencian los contenedores de las máquinas virtuales.">
+    <title>Fundamentos | Docker y Contenedores</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+    <header class="site-header">
+        <div class="container header-layout">
+            <a class="brand" href="index.html">🐳 Docker<span>y Contenedores</span></a>
+                 <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-principal">☰</button>
+            <nav id="nav-principal" aria-label="Navegación principal">
+                <ul class="nav-list">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="fundamentos.html" class="activo" aria-current="page">Fundamentos</a></li>
+                    <li><a href="arquitectura.html">Arquitectura</a></li>
+                    <li><a href="imagenes.html">Imágenes</a></li>
+                    <li><a href="compose.html">Compose</a></li>
+                    <li><a href="creador.html">Sobre mí</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="contenido" class="container">
+        <section class="page-intro">
+            <p class="eyebrow">Módulo 01</p>
+            <h1>Fundamentos</h1>
+            <p class="lead">El problema que resuelve Docker, de dónde viene y en qué se diferencia de una máquina virtual.</p>
+        </section>
+
+        <div class="page-layout">
+
+            <aside class="toc">
+                <nav aria-label="Contenido de esta página">
+                    <p class="toc-titulo">En esta página</p>
+                    <ul>
+                        <li><a href="#problema">El problema</a></li>
+                        <li><a href="#historia">Historia</a></li>
+                        <li><a href="#contenedores-vs-vm">Contenedores vs. máquinas virtuales</a></li>
+                        <li><a href="#glosario">Glosario</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <div class="contenido-pagina">
+
+                <section id="problema">
+                    <h2>El problema: "en mi máquina funciona"</h2>
+                    <p>Una aplicación no depende solo de su código. También necesita un sistema operativo, versiones concretas de lenguajes y librerías, variables de entorno y servicios como bases de datos. Si el equipo de desarrollo, el de pruebas y el servidor de producción difieren en cualquiera de esos puntos, la aplicación puede fallar en un entorno y funcionar en otro.</p>
+                    <p>Docker resuelve esto empaquetando la aplicación junto con todo lo que necesita para ejecutarse en una unidad llamada <strong>contenedor</strong>. Ese paquete se comporta igual en el portátil del desarrollador, en un servidor local o en la nube.</p>
+                    <div class="nota">
+                        <strong>Idea clave:</strong> un contenedor no es una máquina completa. Es un proceso (o un grupo de procesos) aislado del resto del sistema que comparte el kernel del sistema operativo anfitrión.
+                    </div>
+                </section>
+
+                <section id="historia">
+                    <h2>Historia</h2>
+                    <p>Docker no inventó el aislamiento de procesos. Lo que hizo fue volverlo fácil de usar. Estos son los hitos principales:</p>
+                    <ol class="linea-tiempo">
+                        <li>
+                            <span class="anio">1979</span>
+                            <div>
+                                <h3>chroot</h3>
+                                <p>Unix V7 introduce la llamada que cambia el directorio raíz de un proceso, el primer paso hacia el aislamiento del sistema de archivos.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="anio">2000</span>
+                            <div>
+                                <h3>FreeBSD Jails</h3>
+                                <p>Amplían la idea para aislar también procesos y red.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="anio">2004</span>
+                            <div>
+                                <h3>Solaris Zones</h3>
+                                <p>Sun Microsystems ofrece contenedores a nivel de sistema operativo.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="anio">2008</span>
+                            <div>
+                                <h3>LXC</h3>
+                                <p>Linux Containers combina las funciones del kernel de Linux (namespaces y cgroups) en una herramienta utilizable.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="anio">2013</span>
+                            <div>
+                                <h3>Docker</h3>
+                                <p>La empresa dotCloud, con Solomon Hykes, presenta Docker en la conferencia PyCon. Su aporte principal fue una forma sencilla de construir, distribuir y ejecutar contenedores.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="anio">2014</span>
+                            <div>
+                                <h3>Kubernetes</h3>
+                                <p>Google publica este orquestador, pensado para gestionar contenedores en grandes clústeres.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="anio">2015</span>
+                            <div>
+                                <h3>OCI</h3>
+                                <p>Nace la Open Container Initiative, bajo la Linux Foundation, para estandarizar el formato de imágenes y el tiempo de ejecución de contenedores.</p>
+                            </div>
+                        </li>
+                    </ol>
+                </section>
+
+                <section id="contenedores-vs-vm">
+                    <h2>Contenedores vs. máquinas virtuales</h2>
+                    <p>Ambas tecnologías aíslan aplicaciones, pero lo hacen en capas distintas. Una máquina virtual emula hardware completo y ejecuta un sistema operativo propio sobre un hipervisor. Un contenedor se ejecuta directamente sobre el kernel del anfitrión.</p>
+
+                    <figure class="figura">
+                        <img src="img/vm-vs-contenedor.svg" alt="Diagrama comparativo: a la izquierda una máquina virtual con hipervisor y sistema operativo invitado; a la derecha un contenedor sobre el motor de contenedores y el kernel del anfitrión" width="800" height="400">
+                        <figcaption>Una máquina virtual incluye un sistema operativo completo; un contenedor comparte el del anfitrión.</figcaption>
+                    </figure>
+
+                    <div class="tabla-scroll">
+                        <table>
+                            <caption>Comparación entre máquinas virtuales y contenedores</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Característica</th>
+                                    <th scope="col">Máquina virtual</th>
+                                    <th scope="col">Contenedor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Kernel</th>
+                                    <td>Propio, dentro de cada sistema invitado</td>
+                                    <td>Compartido con el anfitrión</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Tamaño típico</th>
+                                    <td>Gigabytes</td>
+                                    <td>Megabytes</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Tiempo de arranque</th>
+                                    <td>Minutos o decenas de segundos</td>
+                                    <td>Segundos o menos</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Consumo de recursos</th>
+                                    <td>Mayor, por el sistema operativo completo</td>
+                                    <td>Menor, solo la aplicación y sus dependencias</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Aislamiento</th>
+                                    <td>Más fuerte, a nivel de hardware virtualizado</td>
+                                    <td>Más ligero, a nivel de proceso</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Caso ideal</th>
+                                    <td>Ejecutar sistemas operativos distintos o cargas que requieren aislamiento máximo</td>
+                                    <td>Microservicios, entornos reproducibles e integración continua</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="nota">
+                        <strong>Importante:</strong> los contenedores de Linux necesitan un kernel de Linux. En Windows y macOS, Docker Desktop ejecuta una pequeña máquina virtual con Linux por debajo, y los contenedores corren dentro de ella.
+                    </div>
+                    <p>No son tecnologías rivales: en la práctica se combinan. Es habitual que los contenedores se ejecuten dentro de máquinas virtuales en la nube.</p>
+                </section>
+
+                <section id="glosario">
+                    <h2>Glosario</h2>
+                    <dl class="glosario">
+                        <dt>Imagen</dt>
+                        <dd>Plantilla de solo lectura, formada por capas, que contiene la aplicación y sus dependencias.</dd>
+                        <dt>Contenedor</dt>
+                        <dd>Instancia en ejecución de una imagen.</dd>
+                        <dt>Dockerfile</dt>
+                        <dd>Archivo de texto con las instrucciones para construir una imagen.</dd>
+                        <dt>Registro</dt>
+                        <dd>Servicio donde se almacenan y comparten imágenes. Docker Hub es el más conocido.</dd>
+                        <dt>Daemon (dockerd)</dt>
+                        <dd>Servicio en segundo plano que gestiona imágenes, contenedores, redes y volúmenes.</dd>
+                        <dt>Namespace</dt>
+                        <dd>Función del kernel de Linux que da a cada proceso su propia vista de recursos (procesos, red, sistema de archivos).</dd>
+                        <dt>cgroup</dt>
+                        <dd>Función del kernel de Linux que limita y mide los recursos (CPU, memoria) de un grupo de procesos.</dd>
+                        <dt>Volumen</dt>
+                        <dd>Almacenamiento gestionado por Docker que persiste aunque el contenedor se elimine.</dd>
+                        <dt>OCI</dt>
+                        <dd>Open Container Initiative: estándares abiertos para imágenes y runtimes de contenedores.</dd>
+                    </dl>
+                </section>
+
+                <a class="pagina-siguiente" href="arquitectura.html">
+                    <span>Siguiente módulo</span>
+                    Arquitectura →
+                </a>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-layout">
+            <p>🐳 Aprende, prueba y despliega</p>
+            <a href="#contenido">Volver arriba ↑</a>
+        </div>
+    </footer>
+<script src="js/script.js" defer></script>
+</body>
+</html>
