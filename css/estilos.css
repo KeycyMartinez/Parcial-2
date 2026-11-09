@@ -83,7 +83,6 @@ a {
     text-decoration: none;
 }
 .brand span {
-    margin-left: 0.3rem;
     background: var(--degradado);
     -webkit-background-clip: text;
     background-clip: text;
