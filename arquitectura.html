@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Cómo está construido Docker: cliente, dockerd, containerd, runc, namespaces y cgroups.">
+    <meta name="description"
+        content="Cómo está construido Docker: cliente, dockerd, containerd, runc, namespaces y cgroups.">
     <title>Arquitectura | Docker y Contenedores</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/estilos.css">
 </head>
+
 <body>
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
     <header class="site-header">
         <div class="container header-layout">
             <a class="brand" href="index.html">🐳 Docker<span>y Contenedores</span></a>
-                 <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-principal">☰</button>
+            <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false"
+                aria-controls="nav-principal">☰</button>
             <nav id="nav-principal" aria-label="Navegación principal">
                 <ul class="nav-list">
                     <li><a href="index.html">Inicio</a></li>
@@ -34,7 +38,8 @@
         <section class="page-intro">
             <p class="eyebrow">Módulo 02</p>
             <h1>Arquitectura</h1>
-            <p class="lead">Qué componentes intervienen cuando ejecutas un contenedor y cómo el kernel de Linux lo mantiene aislado.</p>
+            <p class="lead">Qué componentes intervienen cuando ejecutas un contenedor y cómo el kernel de Linux lo
+                mantiene aislado.</p>
         </section>
 
         <div class="page-layout">
@@ -57,18 +62,28 @@
 
                 <section id="vision-general">
                     <h2>Visión general</h2>
-                    <p>Docker sigue una arquitectura cliente-servidor. El comando <code>docker</code> que escribes en la terminal es solo un <strong>cliente</strong>: no crea contenedores por sí mismo, sino que envía peticiones a un servicio en segundo plano, el <strong>daemon</strong> (<code>dockerd</code>), a través de una API REST. Por defecto la comunicación se hace mediante un socket Unix local, aunque también puede hacerse por red.</p>
-                    <p>El daemon, a su vez, no ejecuta los contenedores directamente. Delega esa tarea en una cadena de componentes más especializados, hasta llegar al kernel de Linux, que es quien realmente aísla los procesos.</p>
+                    <p>Docker sigue una arquitectura cliente-servidor. El comando <code>docker</code> que escribes en la
+                        terminal es solo un <strong>cliente</strong>: no crea contenedores por sí mismo, sino que envía
+                        peticiones a un servicio en segundo plano, el <strong>daemon</strong> (<code>dockerd</code>), a
+                        través de una API REST. Por defecto la comunicación se hace mediante un socket Unix local,
+                        aunque también puede hacerse por red.</p>
+                    <p>El daemon, a su vez, no ejecuta los contenedores directamente. Delega esa tarea en una cadena de
+                        componentes más especializados, hasta llegar al kernel de Linux, que es quien realmente aísla
+                        los procesos.</p>
 
                     <figure class="figura">
-                        <img src="img/arquitectura-docker.svg" alt="Diagrama de la arquitectura de Docker: el cliente docker envía peticiones a dockerd; dockerd usa containerd, containerd-shim y runc para crear contenedores sobre el kernel de Linux; las imágenes se obtienen de un registro" width="800" height="400">
-                        <figcaption>Cadena de componentes entre el comando docker y los contenedores en ejecución.</figcaption>
+                        <img src="img/arquitectura-docker.svg"
+                            alt="Diagrama de la arquitectura de Docker: el cliente docker envía peticiones a dockerd; dockerd usa containerd, containerd-shim y runc para crear contenedores sobre el kernel de Linux; las imágenes se obtienen de un registro"
+                            width="800" height="400">
+                        <figcaption>Cadena de componentes entre el comando docker y los contenedores en ejecución.
+                        </figcaption>
                     </figure>
                 </section>
 
                 <section id="componentes">
                     <h2>Componentes</h2>
-                    <p>Cada pieza tiene una responsabilidad concreta. Esta separación permite reemplazar o reutilizar componentes sin cambiar el resto, y es la base de los estándares de la OCI.</p>
+                    <p>Cada pieza tiene una responsabilidad concreta. Esta separación permite reemplazar o reutilizar
+                        componentes sin cambiar el resto, y es la base de los estándares de la OCI.</p>
 
                     <div class="tabla-scroll">
                         <table>
@@ -82,56 +97,75 @@
                             <tbody>
                                 <tr>
                                     <th scope="row">Cliente (<code>docker</code>)</th>
-                                    <td>Interfaz de línea de comandos. Traduce cada comando en una petición a la API del daemon.</td>
+                                    <td>Interfaz de línea de comandos. Traduce cada comando en una petición a la API del
+                                        daemon.</td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><code>dockerd</code></th>
-                                    <td>Daemon de Docker. Gestiona imágenes, contenedores, redes y volúmenes, y expone la API.</td>
+                                    <td>Daemon de Docker. Gestiona imágenes, contenedores, redes y volúmenes, y expone
+                                        la API.</td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><code>containerd</code></th>
-                                    <td>Runtime de alto nivel. Administra el ciclo de vida de los contenedores (crear, iniciar, detener) y el almacenamiento de imágenes.</td>
+                                    <td>Runtime de alto nivel. Administra el ciclo de vida de los contenedores (crear,
+                                        iniciar, detener) y el almacenamiento de imágenes.</td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><code>containerd-shim</code></th>
-                                    <td>Proceso intermedio que permanece junto a cada contenedor. Mantiene abiertas sus entradas y salidas y permite reiniciar <code>containerd</code> sin afectar a los contenedores.</td>
+                                    <td>Proceso intermedio que permanece junto a cada contenedor. Mantiene abiertas sus
+                                        entradas y salidas y permite reiniciar <code>containerd</code> sin afectar a los
+                                        contenedores.</td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><code>runc</code></th>
-                                    <td>Runtime de bajo nivel. Implementación de referencia de la especificación de la OCI: configura namespaces, cgroups y sistema de archivos, y lanza el proceso del contenedor.</td>
+                                    <td>Runtime de bajo nivel. Implementación de referencia de la especificación de la
+                                        OCI: configura namespaces, cgroups y sistema de archivos, y lanza el proceso del
+                                        contenedor.</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Registro</th>
-                                    <td>Servicio que almacena y distribuye imágenes. Docker Hub es el público por defecto, pero puede usarse uno privado.</td>
+                                    <td>Servicio que almacena y distribuye imágenes. Docker Hub es el público por
+                                        defecto, pero puede usarse uno privado.</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
                     <div class="nota">
-                        <strong>Dato histórico:</strong> en las primeras versiones, Docker lo hacía todo en un único programa. A partir de Docker 1.11 (2016) se separó en <code>containerd</code> y <code>runc</code>, y ambos pasaron a ser proyectos independientes que usan también otras herramientas, como Kubernetes.
+                        <strong>Dato histórico:</strong> en las primeras versiones, Docker lo hacía todo en un único
+                        programa. A partir de Docker 1.11 (2016) se separó en <code>containerd</code> y
+                        <code>runc</code>, y ambos pasaron a ser proyectos independientes que usan también otras
+                        herramientas, como Kubernetes.
                     </div>
                 </section>
 
                 <section id="docker-run">
                     <h2>Qué ocurre con <code>docker run</code></h2>
-                    <p>Un solo comando activa toda la cadena anterior. Tomemos este ejemplo, que arranca un servidor web Nginx:</p>
+                    <p>Un solo comando activa toda la cadena anterior. Tomemos este ejemplo, que arranca un servidor web
+                        Nginx:</p>
 
-<pre><code>docker run -d -p 8080:80 nginx</code></pre>
+                    <pre><code>docker run -d -p 8080:80 nginx</code></pre>
 
                     <ol class="pasos">
                         <li>El <strong>cliente</strong> envía la petición a <code>dockerd</code> mediante la API.</li>
-                        <li><code>dockerd</code> busca la imagen <code>nginx</code> en el equipo. Si no la encuentra, la <strong>descarga del registro</strong> (Docker Hub).</li>
-                        <li><code>dockerd</code> prepara la configuración del contenedor (red, puertos, volúmenes) y se la pasa a <strong>containerd</strong>.</li>
-                        <li><code>containerd</code> lanza un <strong>shim</strong> y le pide a <strong>runc</strong> que cree el contenedor.</li>
-                        <li><code>runc</code> crea los <strong>namespaces</strong> y <strong>cgroups</strong>, monta el sistema de archivos de la imagen e inicia el proceso. Después termina su ejecución.</li>
-                        <li>El <strong>shim</strong> queda supervisando el proceso mientras el contenedor siga activo.</li>
+                        <li><code>dockerd</code> busca la imagen <code>nginx</code> en el equipo. Si no la encuentra, la
+                            <strong>descarga del registro</strong> (Docker Hub).</li>
+                        <li><code>dockerd</code> prepara la configuración del contenedor (red, puertos, volúmenes) y se
+                            la pasa a <strong>containerd</strong>.</li>
+                        <li><code>containerd</code> lanza un <strong>shim</strong> y le pide a <strong>runc</strong> que
+                            cree el contenedor.</li>
+                        <li><code>runc</code> crea los <strong>namespaces</strong> y <strong>cgroups</strong>, monta el
+                            sistema de archivos de la imagen e inicia el proceso. Después termina su ejecución.</li>
+                        <li>El <strong>shim</strong> queda supervisando el proceso mientras el contenedor siga activo.
+                        </li>
                     </ol>
                 </section>
 
                 <section id="namespaces">
                     <h2>Namespaces: qué puede ver un contenedor</h2>
-                    <p>Un <em>namespace</em> es una función del kernel de Linux que da a un proceso su propia vista de un recurso del sistema. Dentro del contenedor, el proceso cree estar solo en la máquina. Docker crea un conjunto de namespaces para cada contenedor:</p>
+                    <p>Un <em>namespace</em> es una función del kernel de Linux que da a un proceso su propia vista de
+                        un recurso del sistema. Dentro del contenedor, el proceso cree estar solo en la máquina. Docker
+                        crea un conjunto de namespaces para cada contenedor:</p>
 
                     <div class="tabla-scroll">
                         <table>
@@ -145,7 +179,8 @@
                             <tbody>
                                 <tr>
                                     <th scope="row"><code>pid</code></th>
-                                    <td>Los identificadores de proceso. El primer proceso del contenedor es el PID 1 y no ve los procesos del anfitrión.</td>
+                                    <td>Los identificadores de proceso. El primer proceso del contenedor es el PID 1 y
+                                        no ve los procesos del anfitrión.</td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><code>net</code></th>
@@ -165,7 +200,9 @@
                                 </tr>
                                 <tr>
                                     <th scope="row"><code>user</code></th>
-                                    <td>Los identificadores de usuario y grupo. Permite que root dentro del contenedor corresponda a un usuario sin privilegios en el anfitrión. No se activa por defecto.</td>
+                                    <td>Los identificadores de usuario y grupo. Permite que root dentro del contenedor
+                                        corresponda a un usuario sin privilegios en el anfitrión. No se activa por
+                                        defecto.</td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><code>cgroup</code></th>
@@ -176,26 +213,30 @@
                     </div>
 
                     <h3 class="subtitulo">Compruébalo tú mismo</h3>
-                    <p>Si ejecutas un contenedor que solo lista sus procesos, verás que únicamente existe el suyo, con PID 1:</p>
+                    <p>Si ejecutas un contenedor que solo lista sus procesos, verás que únicamente existe el suyo, con
+                        PID 1:</p>
 
-<pre><code>docker run --rm alpine ps</code></pre>
+                    <pre><code>docker run --rm alpine ps</code></pre>
 
-<p class="resultado-etiqueta">Resultado:</p>
+                    <p class="resultado-etiqueta">Resultado:</p>
 
-<pre class="salida"><code>PID   USER     TIME  COMMAND
+                    <pre class="salida"><code>PID   USER     TIME  COMMAND
     1 root      0:00 ps</code></pre>
 
                     <p>Y si pides el nombre de host, obtendrás el identificador del contenedor, no el de tu equipo:</p>
 
-<pre><code>docker run --rm alpine hostname</code></pre>
+                    <pre><code>docker run --rm alpine hostname</code></pre>
                 </section>
 
                 <section id="cgroups">
                     <h2>Cgroups: cuántos recursos puede usar</h2>
-                    <p>Los namespaces controlan lo que un contenedor <em>ve</em>; los <em>control groups</em> (cgroups) controlan lo que puede <em>consumir</em>. Sin ellos, un contenedor podría acaparar toda la memoria o la CPU del anfitrión y afectar a los demás. Las distribuciones actuales de Linux usan la versión 2 de cgroups.</p>
+                    <p>Los namespaces controlan lo que un contenedor <em>ve</em>; los <em>control groups</em> (cgroups)
+                        controlan lo que puede <em>consumir</em>. Sin ellos, un contenedor podría acaparar toda la
+                        memoria o la CPU del anfitrión y afectar a los demás. Las distribuciones actuales de Linux usan
+                        la versión 2 de cgroups.</p>
                     <p>Con Docker, los límites se fijan al crear el contenedor:</p>
 
-<pre><code>docker run -d --name web \
+                    <pre><code>docker run -d --name web \
   --memory=256m \
   --cpus=0.5 \
   --pids-limit=100 \
@@ -221,7 +262,8 @@
                                 </tr>
                                 <tr>
                                     <th scope="row"><code>--pids-limit=100</code></th>
-                                    <td>Limita el número de procesos, lo que ayuda a contener ataques de tipo fork bomb.</td>
+                                    <td>Limita el número de procesos, lo que ayuda a contener ataques de tipo fork bomb.
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -229,23 +271,32 @@
 
                     <p>Para ver el consumo real de los contenedores en ejecución puedes usar:</p>
 
-<pre><code>docker stats</code></pre>
+                    <pre><code>docker stats</code></pre>
 
                     <div class="nota">
-                        <strong>Qué pasa si se supera el límite:</strong> con la CPU, el contenedor simplemente se ralentiza. Con la memoria, el kernel puede terminar el proceso mediante el OOM killer y el contenedor se detiene.
+                        <strong>Qué pasa si se supera el límite:</strong> con la CPU, el contenedor simplemente se
+                        ralentiza. Con la memoria, el kernel puede terminar el proceso mediante el OOM killer y el
+                        contenedor se detiene.
                     </div>
                 </section>
 
                 <section id="mas-capas">
                     <h2>Más capas de seguridad</h2>
-                    <p>Los namespaces y los cgroups son la base, pero no la única defensa. Docker añade por defecto otras restricciones:</p>
+                    <p>Los namespaces y los cgroups son la base, pero no la única defensa. Docker añade por defecto
+                        otras restricciones:</p>
                     <ul class="lista">
-                        <li><strong>Capabilities:</strong> el contenedor arranca con un conjunto reducido de los privilegios de root, no con todos.</li>
-                        <li><strong>Seccomp:</strong> un perfil por defecto bloquea llamadas al sistema consideradas peligrosas.</li>
-                        <li><strong>AppArmor o SELinux:</strong> políticas de control de acceso, según la distribución.</li>
+                        <li><strong>Capabilities:</strong> el contenedor arranca con un conjunto reducido de los
+                            privilegios de root, no con todos.</li>
+                        <li><strong>Seccomp:</strong> un perfil por defecto bloquea llamadas al sistema consideradas
+                            peligrosas.</li>
+                        <li><strong>AppArmor o SELinux:</strong> políticas de control de acceso, según la distribución.
+                        </li>
                     </ul>
                     <div class="nota">
-                        <strong>Una limitación importante:</strong> como todos los contenedores comparten el kernel del anfitrión, una vulnerabilidad en el kernel puede afectar a todos a la vez. Por eso el aislamiento de un contenedor es más débil que el de una máquina virtual, como vimos en <a href="fundamentos.html#contenedores-vs-vm">Fundamentos</a>.
+                        <strong>Una limitación importante:</strong> como todos los contenedores comparten el kernel del
+                        anfitrión, una vulnerabilidad en el kernel puede afectar a todos a la vez. Por eso el
+                        aislamiento de un contenedor es más débil que el de una máquina virtual, como vimos en <a
+                            href="fundamentos.html#contenedores-vs-vm">Fundamentos</a>.
                     </div>
                 </section>
 
@@ -264,6 +315,7 @@
             <a href="#contenido">Volver arriba ↑</a>
         </div>
     </footer>
-<script src="js/script.js" defer></script>
+    <script src="js/script.js" defer></script>
 </body>
+
 </html>
