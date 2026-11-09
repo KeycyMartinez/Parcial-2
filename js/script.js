@@ -1,79 +1,109 @@
-document.addEventListener('DOMContentLoaded', () => {
+const botonMenu = document.querySelector('.menu-toggle');
+const menu = document.getElementById('nav-principal');
 
-    const boton = document.querySelector('.menu-toggle');
-    const nav = document.getElementById('nav-principal');
+function abrirMenu() {
+    menu.classList.add('abierto');
+    botonMenu.setAttribute('aria-expanded', 'true');
+    botonMenu.setAttribute('aria-label', 'Cerrar menú');
+    botonMenu.textContent = '✕';
+}
 
-    if (boton && nav) {
-        const cerrarMenu = () => {
-            nav.classList.remove('abierto');
-            boton.setAttribute('aria-expanded', 'false');
-            boton.setAttribute('aria-label', 'Abrir menú');
-            boton.textContent = '☰';
-        };
+function cerrarMenu() {
+    menu.classList.remove('abierto');
+    botonMenu.setAttribute('aria-expanded', 'false');
+    botonMenu.setAttribute('aria-label', 'Abrir menú');
+    botonMenu.textContent = '☰';
+}
 
-        boton.addEventListener('click', () => {
-            const abierto = nav.classList.toggle('abierto');
-            boton.setAttribute('aria-expanded', String(abierto));
-            boton.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
-            boton.textContent = abierto ? '✕' : '☰';
-        });
+function alternarMenu() {
+    if (menu.classList.contains('abierto')) {
+        cerrarMenu();
+    } else {
+        abrirMenu();
+    }
+}
 
-        nav.addEventListener('click', (e) => {
-            if (e.target.closest('a')) cerrarMenu();
-        });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') cerrarMenu();
-        });
-        window.matchMedia('(min-width: 961px)').addEventListener('change', cerrarMenu);
+if (botonMenu !== null && menu !== null) {
+    botonMenu.onclick = alternarMenu;
+
+    menu.onclick = function (evento) {
+        if (evento.target.tagName === 'A') {
+            cerrarMenu();
+        }
+    };
+
+    document.onkeydown = function (evento) {
+        if (evento.key === 'Escape') {
+            cerrarMenu();
+        }
+    };
+
+    window.onresize = function () {
+        if (window.innerWidth > 960) {
+            cerrarMenu();
+        }
+    };
+}
+
+function crearBotonCopiar(bloque) {
+    const codigo = bloque.querySelector('code');
+
+    if (codigo === null || bloque.classList.contains('salida')) {
+        return;
     }
 
-    document.querySelectorAll('pre').forEach((pre) => {
-        const codigo = pre.querySelector('code');
-        if (!codigo || pre.classList.contains('salida')) return;
+    const boton = document.createElement('button');
+    boton.type = 'button';
+    boton.className = 'btn-copiar';
+    boton.textContent = 'Copiar';
+    boton.setAttribute('aria-label', 'Copiar código al portapapeles');
 
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'btn-copiar';
-        btn.textContent = 'Copiar';
-        btn.setAttribute('aria-label', 'Copiar código al portapapeles');
-        btn.setAttribute('aria-live', 'polite');
-
-        btn.addEventListener('click', async () => {
-            try {
-                await navigator.clipboard.writeText(codigo.innerText);
-                btn.textContent = '¡Copiado!';
-                btn.classList.add('copiado');
-            } catch (error) {
-                btn.textContent = 'No se pudo copiar';
-            }
-            setTimeout(() => {
-                btn.textContent = 'Copiar';
-                btn.classList.remove('copiado');
-            }, 1800);
-        });
-
-        pre.appendChild(btn);
-    });
-
-    const enlacesIndice = document.querySelectorAll('.toc a');
-
-    if (enlacesIndice.length && 'IntersectionObserver' in window) {
-        const secciones = new Map();
-
-        enlacesIndice.forEach((enlace) => {
-            const seccion = document.querySelector(enlace.getAttribute('href'));
-            if (seccion) secciones.set(seccion, enlace);
-        });
-
-        const observador = new IntersectionObserver((entradas) => {
-            entradas.forEach((entrada) => {
-                if (entrada.isIntersecting) {
-                    enlacesIndice.forEach((e) => e.classList.remove('actual'));
-                    secciones.get(entrada.target).classList.add('actual');
-                }
+    boton.onclick = function () {
+        navigator.clipboard.writeText(codigo.innerText)
+            .then(function () {
+                boton.textContent = '¡Copiado!';
+                boton.classList.add('copiado');
+            })
+            .catch(function () {
+                boton.textContent = 'No se pudo copiar';
             });
-        }, { rootMargin: '-20% 0px -70% 0px' });
 
-        secciones.forEach((enlace, seccion) => observador.observe(seccion));
+        setTimeout(function () {
+            boton.textContent = 'Copiar';
+            boton.classList.remove('copiado');
+        }, 1800);
+    };
+
+    bloque.appendChild(boton);
+}
+
+const bloquesDeCodigo = document.querySelectorAll('pre');
+for (let i = 0; i < bloquesDeCodigo.length; i++) {
+    crearBotonCopiar(bloquesDeCodigo[i]);
+}
+
+const enlacesIndice = document.querySelectorAll('.toc a');
+
+function marcarSeccionActual() {
+    let enlaceActual = null;
+
+    for (let i = 0; i < enlacesIndice.length; i++) {
+        const seccion = document.querySelector(enlacesIndice[i].getAttribute('href'));
+        if (seccion !== null && seccion.getBoundingClientRect().top <= 150) {
+            enlaceActual = enlacesIndice[i];
+        }
     }
-});
+
+    for (let i = 0; i < enlacesIndice.length; i++) {
+        enlacesIndice[i].classList.remove('actual');
+    }
+
+    if (enlaceActual !== null) {
+        enlaceActual.classList.add('actual');
+    }
+}
+
+if (enlacesIndice.length > 0) {
+    window.onscroll = marcarSeccionActual;
+    marcarSeccionActual();
+}
