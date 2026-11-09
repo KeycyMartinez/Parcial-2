@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Capas de una imagen, Dockerfile, caché, multi-stage builds y buenas prácticas de seguridad.">
+    <meta name="description"
+        content="Capas de una imagen, Dockerfile, caché, multi-stage builds y buenas prácticas de seguridad.">
     <title>Imágenes | Docker y Contenedores</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/estilos.css">
 </head>
+
 <body>
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
     <header class="site-header">
         <div class="container header-layout">
             <a class="brand" href="index.html">🐳 Docker<span>y Contenedores</span></a>
-                 <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-principal">☰</button>
+            <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false"
+                aria-controls="nav-principal">☰</button>
             <nav id="nav-principal" aria-label="Navegación principal">
                 <ul class="nav-list">
                     <li><a href="index.html">Inicio</a></li>
@@ -34,7 +38,8 @@
         <section class="page-intro">
             <p class="eyebrow">Módulo 03</p>
             <h1>Imágenes y Dockerfile</h1>
-            <p class="lead">Cómo se construye una imagen, por qué importa el orden de las instrucciones y cómo hacerla pequeña y segura.</p>
+            <p class="lead">Cómo se construye una imagen, por qué importa el orden de las instrucciones y cómo hacerla
+                pequeña y segura.</p>
         </section>
 
         <div class="page-layout">
@@ -57,22 +62,34 @@
 
                 <section id="capas">
                     <h2>Imágenes y capas</h2>
-                    <p>Una imagen es una plantilla de solo lectura que contiene todo lo necesario para ejecutar una aplicación: el sistema de archivos base, las dependencias, el código y la configuración. Un contenedor es una instancia en ejecución de esa imagen.</p>
-                    <p>Las imágenes no son un bloque único, sino una pila de <strong>capas</strong>. Cada capa guarda únicamente los cambios en el sistema de archivos respecto a la anterior, y se identifica con un hash SHA-256. Esto tiene dos ventajas: las capas iguales se comparten entre imágenes (se almacenan y se descargan una sola vez) y se pueden reutilizar al reconstruir.</p>
+                    <p>Una imagen es una plantilla de solo lectura que contiene todo lo necesario para ejecutar una
+                        aplicación: el sistema de archivos base, las dependencias, el código y la configuración. Un
+                        contenedor es una instancia en ejecución de esa imagen.</p>
+                    <p>Las imágenes no son un bloque único, sino una pila de <strong>capas</strong>. Cada capa guarda
+                        únicamente los cambios en el sistema de archivos respecto a la anterior, y se identifica con un
+                        hash SHA-256. Esto tiene dos ventajas: las capas iguales se comparten entre imágenes (se
+                        almacenan y se descargan una sola vez) y se pueden reutilizar al reconstruir.</p>
 
                     <figure class="figura">
-                        <img src="img/capas-imagen.svg" alt="Diagrama de capas: una imagen formada por cuatro capas de solo lectura apiladas y, encima, la capa de lectura y escritura del contenedor" width="800" height="400">
-                        <figcaption>Al iniciar un contenedor, Docker añade una capa de escritura sobre las capas de la imagen.</figcaption>
+                        <img src="img/capas-imagen.svg"
+                            alt="Diagrama de capas: una imagen formada por cuatro capas de solo lectura apiladas y, encima, la capa de lectura y escritura del contenedor"
+                            width="800" height="400">
+                        <figcaption>Al iniciar un contenedor, Docker añade una capa de escritura sobre las capas de la
+                            imagen.</figcaption>
                     </figure>
 
-                    <p>Cuando un contenedor modifica un archivo de la imagen, el cambio se copia primero a su capa de escritura (técnica <em>copy-on-write</em>) y la imagen original permanece intacta. Por eso, al eliminar el contenedor, esa capa y sus datos se pierden, y por eso existen los volúmenes para guardar datos que deben persistir.</p>
+                    <p>Cuando un contenedor modifica un archivo de la imagen, el cambio se copia primero a su capa de
+                        escritura (técnica <em>copy-on-write</em>) y la imagen original permanece intacta. Por eso, al
+                        eliminar el contenedor, esa capa y sus datos se pierden, y por eso existen los volúmenes para
+                        guardar datos que deben persistir.</p>
                 </section>
 
                 <section id="dockerfile">
                     <h2>El Dockerfile</h2>
-                    <p>El Dockerfile es un archivo de texto con las instrucciones para construir una imagen, ejecutadas de arriba abajo. Este ejemplo empaqueta una aplicación de Node.js:</p>
+                    <p>El Dockerfile es un archivo de texto con las instrucciones para construir una imagen, ejecutadas
+                        de arriba abajo. Este ejemplo empaqueta una aplicación de Node.js:</p>
 
-<pre><code># Imagen base
+                    <pre><code># Imagen base
 FROM node:22-alpine
 
 # Directorio de trabajo dentro del contenedor
@@ -91,11 +108,12 @@ CMD ["node", "server.js"]</code></pre>
 
                     <p>Para construir la imagen y revisar el resultado:</p>
 
-<pre><code>docker build -t miapp:1.0 .
+                    <pre><code>docker build -t miapp:1.0 .
 docker images
 docker history miapp:1.0</code></pre>
 
-                    <p>El comando <code>docker history</code> muestra cada capa con la instrucción que la creó y su tamaño. Es muy útil para detectar qué paso hace pesada una imagen.</p>
+                    <p>El comando <code>docker history</code> muestra cada capa con la instrucción que la creó y su
+                        tamaño. Es muy útil para detectar qué paso hace pesada una imagen.</p>
 
                     <h3 class="subtitulo">Instrucciones principales</h3>
                     <div class="tabla-scroll">
@@ -118,11 +136,14 @@ docker history miapp:1.0</code></pre>
                                 </tr>
                                 <tr>
                                     <th scope="row"><code>COPY</code></th>
-                                    <td>Copia archivos del equipo a la imagen. Se prefiere sobre <code>ADD</code>, que además descomprime archivos y puede descargar URLs, comportamientos menos predecibles.</td>
+                                    <td>Copia archivos del equipo a la imagen. Se prefiere sobre <code>ADD</code>, que
+                                        además descomprime archivos y puede descargar URLs, comportamientos menos
+                                        predecibles.</td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><code>RUN</code></th>
-                                    <td>Ejecuta un comando durante la construcción (instalar paquetes, compilar). Genera una capa.</td>
+                                    <td>Ejecuta un comando durante la construcción (instalar paquetes, compilar). Genera
+                                        una capa.</td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><code>ENV</code></th>
@@ -130,70 +151,89 @@ docker history miapp:1.0</code></pre>
                                 </tr>
                                 <tr>
                                     <th scope="row"><code>EXPOSE</code></th>
-                                    <td>Documenta el puerto en el que escucha la aplicación. No lo publica: eso se hace con <code>-p</code> al ejecutar.</td>
+                                    <td>Documenta el puerto en el que escucha la aplicación. No lo publica: eso se hace
+                                        con <code>-p</code> al ejecutar.</td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><code>USER</code></th>
-                                    <td>Indica con qué usuario se ejecutan las instrucciones siguientes y el contenedor.</td>
+                                    <td>Indica con qué usuario se ejecutan las instrucciones siguientes y el contenedor.
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><code>CMD</code></th>
-                                    <td>Comando por defecto al iniciar el contenedor. Puede sustituirse al ejecutar <code>docker run</code>.</td>
+                                    <td>Comando por defecto al iniciar el contenedor. Puede sustituirse al ejecutar
+                                        <code>docker run</code>.</td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><code>ENTRYPOINT</code></th>
-                                    <td>Define el ejecutable principal del contenedor. Se combina con <code>CMD</code>, que aporta los argumentos por defecto.</td>
+                                    <td>Define el ejecutable principal del contenedor. Se combina con <code>CMD</code>,
+                                        que aporta los argumentos por defecto.</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
                     <div class="nota">
-                        <strong>Detalle útil:</strong> solo <code>RUN</code>, <code>COPY</code> y <code>ADD</code> añaden contenido a la imagen. Instrucciones como <code>ENV</code>, <code>EXPOSE</code>, <code>USER</code> o <code>CMD</code> solo guardan metadatos. Se recomienda escribir <code>CMD</code> en formato de lista (<code>["node", "server.js"]</code>) para que el proceso reciba directamente las señales del sistema.
+                        <strong>Detalle útil:</strong> solo <code>RUN</code>, <code>COPY</code> y <code>ADD</code>
+                        añaden contenido a la imagen. Instrucciones como <code>ENV</code>, <code>EXPOSE</code>,
+                        <code>USER</code> o <code>CMD</code> solo guardan metadatos. Se recomienda escribir
+                        <code>CMD</code> en formato de lista (<code>["node", "server.js"]</code>) para que el proceso
+                        reciba directamente las señales del sistema.
                     </div>
                 </section>
 
                 <section id="cache">
                     <h2>Caché de capas</h2>
-                    <p>Al reconstruir una imagen, Docker reutiliza una capa si la instrucción y los archivos que usa no han cambiado. Pero hay una regla clave: <strong>en cuanto una capa se invalida, todas las siguientes se reconstruyen</strong>. Por eso el orden de las instrucciones determina cuánto tarda cada construcción.</p>
-                    <p>La estrategia consiste en poner primero lo que cambia poco (las dependencias) y al final lo que cambia mucho (tu código):</p>
+                    <p>Al reconstruir una imagen, Docker reutiliza una capa si la instrucción y los archivos que usa no
+                        han cambiado. Pero hay una regla clave: <strong>en cuanto una capa se invalida, todas las
+                            siguientes se reconstruyen</strong>. Por eso el orden de las instrucciones determina cuánto
+                        tarda cada construcción.</p>
+                    <p>La estrategia consiste en poner primero lo que cambia poco (las dependencias) y al final lo que
+                        cambia mucho (tu código):</p>
 
                     <div class="comparar">
                         <div>
                             <span class="etiqueta mal">✗ Menos eficiente</span>
-<pre><code>FROM node:22-alpine
+                            <pre><code>FROM node:22-alpine
 WORKDIR /app
 COPY . .
 RUN npm ci
 CMD ["node", "server.js"]</code></pre>
-                            <p>Cualquier cambio en el código invalida <code>COPY . .</code> y obliga a reinstalar todas las dependencias.</p>
+                            <p>Cualquier cambio en el código invalida <code>COPY . .</code> y obliga a reinstalar todas
+                                las dependencias.</p>
                         </div>
                         <div>
                             <span class="etiqueta bien">✓ Mejor</span>
-<pre><code>FROM node:22-alpine
+                            <pre><code>FROM node:22-alpine
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
 CMD ["node", "server.js"]</code></pre>
-                            <p>Las dependencias solo se reinstalan si cambia <code>package.json</code>. Si solo editas código, se reutiliza la caché.</p>
+                            <p>Las dependencias solo se reinstalan si cambia <code>package.json</code>. Si solo editas
+                                código, se reutiliza la caché.</p>
                         </div>
                     </div>
 
-                    <p>En la salida de <code>docker build</code> verás la palabra <code>CACHED</code> junto a los pasos que se reutilizaron.</p>
+                    <p>En la salida de <code>docker build</code> verás la palabra <code>CACHED</code> junto a los pasos
+                        que se reutilizaron.</p>
 
-                    <p>Otra técnica es agrupar comandos relacionados en un solo <code>RUN</code> y limpiar lo que ya no se necesita en la misma instrucción, porque borrar archivos en una capa posterior no reduce el tamaño de las anteriores:</p>
+                    <p>Otra técnica es agrupar comandos relacionados en un solo <code>RUN</code> y limpiar lo que ya no
+                        se necesita en la misma instrucción, porque borrar archivos en una capa posterior no reduce el
+                        tamaño de las anteriores:</p>
 
-<pre><code>RUN apt-get update &amp;&amp; \
+                    <pre><code>RUN apt-get update &amp;&amp; \
     apt-get install -y --no-install-recommends curl &amp;&amp; \
     rm -rf /var/lib/apt/lists/*</code></pre>
                 </section>
 
                 <section id="multi-stage">
                     <h2>Multi-stage builds</h2>
-                    <p>Para compilar una aplicación suelen hacer falta herramientas (compiladores, dependencias de desarrollo) que no se necesitan para ejecutarla. Con las construcciones en varias etapas, usas una imagen para compilar y copias solo el resultado a una imagen final limpia:</p>
+                    <p>Para compilar una aplicación suelen hacer falta herramientas (compiladores, dependencias de
+                        desarrollo) que no se necesitan para ejecutarla. Con las construcciones en varias etapas, usas
+                        una imagen para compilar y copias solo el resultado a una imagen final limpia:</p>
 
-<pre><code># Etapa 1: compilar
+                    <pre><code># Etapa 1: compilar
 FROM node:22-alpine AS build
 WORKDIR /app
 COPY package*.json ./
@@ -206,26 +246,35 @@ FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80</code></pre>
 
-                    <p>La imagen final contiene solo Nginx y los archivos ya compilados (la carpeta de salida, aquí <code>dist</code>, depende de la herramienta que uses). El código fuente, Node.js y <code>node_modules</code> se quedan en la primera etapa y no llegan a la imagen que se distribuye.</p>
+                    <p>La imagen final contiene solo Nginx y los archivos ya compilados (la carpeta de salida, aquí
+                        <code>dist</code>, depende de la herramienta que uses). El código fuente, Node.js y
+                        <code>node_modules</code> se quedan en la primera etapa y no llegan a la imagen que se
+                        distribuye.</p>
                     <ul class="lista">
                         <li><strong>Imágenes más pequeñas:</strong> se descargan y se despliegan más rápido.</li>
-                        <li><strong>Menor superficie de ataque:</strong> hay menos software instalado que pueda tener vulnerabilidades.</li>
-                        <li><strong>Un solo Dockerfile:</strong> el proceso de compilación queda documentado junto a la imagen.</li>
+                        <li><strong>Menor superficie de ataque:</strong> hay menos software instalado que pueda tener
+                            vulnerabilidades.</li>
+                        <li><strong>Un solo Dockerfile:</strong> el proceso de compilación queda documentado junto a la
+                            imagen.</li>
                     </ul>
                 </section>
 
                 <section id="dockerignore">
                     <h2>.dockerignore</h2>
-                    <p>Al ejecutar <code>docker build</code>, Docker envía la carpeta indicada (el <em>contexto de construcción</em>) al motor. El archivo <code>.dockerignore</code> permite excluir lo que no debe formar parte de ella, igual que <code>.gitignore</code> hace con Git.</p>
+                    <p>Al ejecutar <code>docker build</code>, Docker envía la carpeta indicada (el <em>contexto de
+                            construcción</em>) al motor. El archivo <code>.dockerignore</code> permite excluir lo que no
+                        debe formar parte de ella, igual que <code>.gitignore</code> hace con Git.</p>
 
-<pre><code>node_modules
+                    <pre><code>node_modules
 .git
 .env
 *.log
 Dockerfile
 docker-compose.yml</code></pre>
 
-                    <p>Sirve para tres cosas: acelerar la construcción (se envían menos archivos), evitar que <code>COPY . .</code> invalide la caché por archivos irrelevantes y, sobre todo, <strong>impedir que archivos sensibles como <code>.env</code> acaben dentro de la imagen</strong>.</p>
+                    <p>Sirve para tres cosas: acelerar la construcción (se envían menos archivos), evitar que
+                        <code>COPY . .</code> invalide la caché por archivos irrelevantes y, sobre todo, <strong>impedir
+                            que archivos sensibles como <code>.env</code> acaben dentro de la imagen</strong>.</p>
                 </section>
 
                 <section id="buenas-practicas">
@@ -252,11 +301,15 @@ docker-compose.yml</code></pre>
                                 </tr>
                                 <tr>
                                     <th scope="row"><code>-alpine</code></th>
-                                    <td>Basada en Alpine Linux, muy ligera (la base ocupa unos pocos MB). Usa musl en lugar de glibc, lo que puede causar incompatibilidades con algunos paquetes.</td>
+                                    <td>Basada en Alpine Linux, muy ligera (la base ocupa unos pocos MB). Usa musl en
+                                        lugar de glibc, lo que puede causar incompatibilidades con algunos paquetes.
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Distroless</th>
-                                    <td>Solo contiene la aplicación y su entorno de ejecución, sin shell ni gestor de paquetes. Es la que menos superficie de ataque ofrece, pero es más difícil de depurar.</td>
+                                    <td>Solo contiene la aplicación y su entorno de ejecución, sin shell ni gestor de
+                                        paquetes. Es la que menos superficie de ataque ofrece, pero es más difícil de
+                                        depurar.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -264,18 +317,26 @@ docker-compose.yml</code></pre>
 
                     <h3 class="subtitulo">Seguridad</h3>
                     <ul class="lista">
-                        <li><strong>No ejecutar como root:</strong> crea o usa un usuario sin privilegios con <code>USER</code>. Si alguien vulnera la aplicación, tendrá menos poder dentro del contenedor.</li>
-                        <li><strong>Fijar la versión de la base:</strong> usa <code>node:22-alpine</code> y no <code>latest</code>, para que las construcciones sean reproducibles.</li>
-                        <li><strong>No guardar secretos en la imagen:</strong> lo que se escribe con <code>ENV</code>, <code>ARG</code> o <code>COPY</code> queda en las capas y puede verse con <code>docker history</code>. Los secretos deben pasarse al ejecutar el contenedor o usar los secretos de BuildKit.</li>
-                        <li><strong>Instalar solo lo necesario:</strong> cada paquete extra es una posible vulnerabilidad.</li>
-                        <li><strong>Escanear las imágenes:</strong> herramientas como Docker Scout o Trivy detectan vulnerabilidades conocidas en las dependencias.</li>
+                        <li><strong>No ejecutar como root:</strong> crea o usa un usuario sin privilegios con
+                            <code>USER</code>. Si alguien vulnera la aplicación, tendrá menos poder dentro del
+                            contenedor.</li>
+                        <li><strong>Fijar la versión de la base:</strong> usa <code>node:22-alpine</code> y no
+                            <code>latest</code>, para que las construcciones sean reproducibles.</li>
+                        <li><strong>No guardar secretos en la imagen:</strong> lo que se escribe con <code>ENV</code>,
+                            <code>ARG</code> o <code>COPY</code> queda en las capas y puede verse con
+                            <code>docker history</code>. Los secretos deben pasarse al ejecutar el contenedor o usar los
+                            secretos de BuildKit.</li>
+                        <li><strong>Instalar solo lo necesario:</strong> cada paquete extra es una posible
+                            vulnerabilidad.</li>
+                        <li><strong>Escanear las imágenes:</strong> herramientas como Docker Scout o Trivy detectan
+                            vulnerabilidades conocidas en las dependencias.</li>
                     </ul>
 
-<pre><code>docker scout cves miapp:1.0</code></pre>
+                    <pre><code>docker scout cves miapp:1.0</code></pre>
 
                     <p>Así quedaría el Dockerfile del inicio aplicando el usuario sin privilegios:</p>
 
-<pre><code>FROM node:22-alpine
+                    <pre><code>FROM node:22-alpine
 WORKDIR /app
 COPY --chown=node:node package*.json ./
 RUN npm ci --omit=dev
@@ -285,7 +346,9 @@ EXPOSE 3000
 CMD ["node", "server.js"]</code></pre>
 
                     <div class="nota">
-                        <strong>Sobre el usuario <code>node</code>:</strong> las imágenes oficiales de Node ya lo incluyen. En otras imágenes tendrás que crear el usuario con <code>RUN</code> (por ejemplo, <code>adduser</code> en Alpine).
+                        <strong>Sobre el usuario <code>node</code>:</strong> las imágenes oficiales de Node ya lo
+                        incluyen. En otras imágenes tendrás que crear el usuario con <code>RUN</code> (por ejemplo,
+                        <code>adduser</code> en Alpine).
                     </div>
                 </section>
 
@@ -304,6 +367,7 @@ CMD ["node", "server.js"]</code></pre>
             <a href="#contenido">Volver arriba ↑</a>
         </div>
     </footer>
-<script src="js/script.js" defer></script>
+    <script src="js/script.js" defer></script>
 </body>
+
 </html>
